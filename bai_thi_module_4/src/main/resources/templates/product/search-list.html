@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Tìm kiếm sản phẩm và danh sách sản phẩm</title>
+    <th:block th:replace="~{/layout/layout::library}"></th:block>
+</head>
+<body>
+<div class="container my-4">
+    <h1 class="mb-4">Danh sách sản phẩm</h1>
+
+    <p><a href="/products/create" class="btn btn-primary">Thêm sản phẩm</a></p>
+
+    <form action="/products" method="get" class="mb-4">
+        <div class="input-group">
+            <input type="text" name="name" class="form-control" placeholder="Tìm kiếm sản phẩm..." th:value="${name}">
+            <button class="btn btn-outline-secondary" type="submit">Tìm kiếm</button>
+        </div>
+    </form>
+
+
+    <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">STT</th>
+            <th scope="col">Tên sản phẩm</th>
+            <th scope="col">Giá bắt đầu</th>
+            <th scope="col">Loại sản phẩm</th>
+            <th scope="col">Tình trạng</th>
+            <th scope="col">Xoá</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product, star:${productPage}">
+            <td th:text="${star.count}"></td>
+            <td th:text="${product.name}"></td>
+            <td th:text="${product.price} + ' VNĐ'"></td>
+            <td th:text="${product.category.name}"></td>
+            <td th:text="${product.status}"></td>
+            <td>
+                <a th:href="@{/products/delete(id=${product.id})}" class="btn btn-danger"
+                   onclick="return confirm('Bạn có muốn xoá không?')">Xoá</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <p th:text="${delete}" class="text-success"></p>
+    <p th:text="${create}" class="text-success"></p>
+
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${!productPage.hasPrevious() ? 'disabled' : ''}">
+                <a class="page-link" th:href="@{/products(page=${productPage.number - 1}, name=${name})}">Trước</a>
+            </li>
+            <li class="page-item disabled">
+                <span class="page-link" th:text="${productPage.number + 1}"></span>
+            </li>
+            <li class="page-item disabled">
+                <span class="page-link">/</span>
+            </li>
+            <li class="page-item disabled">
+                <span class="page-link" th:text="${productPage.totalPages}"></span>
+            </li>
+            <li class="page-item" th:classappend="${!productPage.hasNext() ? 'disabled' : ''}">
+                <a class="page-link" th:href="@{/products(page=${productPage.number + 1}, name=${name})}">Sau</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+</body>
+</html>
